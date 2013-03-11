@@ -1,0 +1,73 @@
+Joshua Day's "Rook"
+Version 1.0.1
+
+An entry in the 2011 Seven Day Roguelike (7DRL) Challenge
+
+Find details about the 2011 7DRL Challenge at
+  http://roguebasin.roguelikedevelopment.org/index.php?title=7DRL_Contest_2011
+
+Find the original success announcement for Rook at
+  http://7drl.org/2011/03/13/rook-7drl-success 
+
+This is the first post-7DRL version.
+
+
+THIS RELEASE
+------------
+
+Several things have changed since the 7DRL version.  This README is new,
+and the bug that caused items to be dropped on impassable terrain and that
+made the player warp off the map when reading a scroll of teleport -- a
+single flaw that made the game think that every cell was occupied and that
+it did not, therefore, matter just where the item was placed or where the
+player ended up -- has been fixed.
+
+This post-7DRL version improves the message system, allows you to drop items,
+allows enemies to run across items, and contains a number of small gameplay
+tweaks.  It will be, I hope, the first of many.
+
+
+THE GAME
+--------
+
+As long as you're wearing the Turk's Turban, you can't die a stupid
+death -- unless there's no safe move left, you cannot die.  If you take
+it off, you're playing a traditional roguelike.  The Ring of Vulnerability
+will save you from losing any hitpoints, because every hit you take will
+kill you, which is forbidden by the orb.  Along the way you'll find potions
+of healing and scrolls of teleport, opium sots, drunkards, hounds, and the
+royal couple themselves, out for a stroll in the woods.  Apparently they're
+bad guys.  Probably tyrants, or something.  Kill them.
+
+The King and Queen are at the far right.  Kill the King to win.  It is
+nearly impossible to kill the Queen.
+
+Move around with the vi-keys (hjklyubn) or with a numlocked number pad.
+Press . or 5 to wait.  Press a or enter to apply an item, followed by the
+letter (or corresponding number, with a=1, b=2, c=3, d=4, e=5) or the item
+to apply.  Applying a worn item will take it off; applying an item you've
+taken off will put it on; applying a potion will quaff it; applying a scroll
+will read it.
+
+Press Q (shift-q) to quit.
+
+Press R (shift-r) to restart.
+
+Press H (shift-h) when in checkmate to see just what the future holds.
+
+
+THE AUTHOR
+----------
+
+The author, like any other writer, wants to hear from you.  You can make
+this happen several ways:
+
+ by e-mail   josh.day@gmail.com
+ on irc      quakenet  #rgrd
+ on usenet   rec.games.roguelike.development
+
+Find future versions of this game at
+  http://roguebasin.roguelikedevelopment.org/index.php?title=Rook
+
+Or just ask to be kept up to date.
+

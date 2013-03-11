@@ -1,25 +1,39 @@
 #include "mods.h"
 #include <stdlib.h>
 
-static gameboard new(int width, int height) {
-	gameboard init;
+static gameboard *board_new(int width, int height) {
+	gameboard *init = malloc(sizeof(gameboard));
 
-	init.width = width;
-	init.height = height;
-	init.size = init.width * init.height;
+	init->width = width;
+	init->height = height;
+	init->size = init->width * init->height;
 
-	init.cells = malloc(sizeof(mondef *) * init.size);
-	init.mob = malloc(sizeof(agent *) * init.size);
+	init->cells = malloc(sizeof(mondef *) * init->size);
+	init->fork_count = 0;
 	
 	// not checking cells or mob for null -- address that
 
 	int i;
 	const mondef *nothing = Catalog.lookup(Catalog.Cell, "blank");
-	for (i = 0; i < init.size; i++) {
-		init.cells[i] = nothing;
+	for (i = 0; i < init->size; i++) {
+		init->cells[i] = nothing;
 	}
 
 	return init;
+}
+
+static gameboard *board_fork(gameboard *old) {
+	old->fork_count++;
+	return old;
+}
+
+static void board_free(gameboard *old) {
+	if (old->fork_count == 0) {
+		free(old->cells);
+		free(old);
+	} else {
+		old->fork_count--;
+	}
 }
 
 static mondef *get(gameboard *board, int x, int y) {
@@ -375,7 +389,10 @@ static void generate(gameboard *board, rng *r) {
 }
 
 struct board_t Board = {
-	new,
+	board_new,
+	board_fork,
+	board_free,
+
 	get,
 	set,
 	generate,

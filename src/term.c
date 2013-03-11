@@ -8,7 +8,7 @@
 #define COLOR_INDEX(color) (1 + ((color)&0x07) + (((color) >> 1) & 0x38))
 #define COLOR_ATTR(color) (COLOR_PAIR(COLOR_INDEX(color)) | (((color)&0x08) ? A_BOLD : 0))
 
-static struct { int curses, color, columns, rows; } videomode = { 0, 0, 0, 0} ;
+static struct { int curses, color; } videomode = { 0, 0 } ;
 
 static void preparecolor ( ) {
 	static int pairParts[8] = {
@@ -62,9 +62,7 @@ static int curses_init( ) {
 	
 	videomode.curses = 1;
 
-	getmaxyx(stdscr, videomode.rows, videomode.columns);
-	Term.width = videomode.columns;
-	Term.height = videomode.rows;
+	getmaxyx(stdscr, Term.height, Term.width);
 
 	atexit(cleanup);
 
@@ -85,7 +83,14 @@ static void print(int x, int y, int color, const char *ch) {
 }
 
 static int getkey( ) {
-	return getch();
+	while (1) {
+		int got = getch();
+		if (got == KEY_RESIZE) {
+			getmaxyx(stdscr, Term.height, Term.width);
+		} else {
+			return got;
+		}
+	}
 }
 
 static void term_clear( ) {

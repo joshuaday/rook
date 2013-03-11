@@ -5,6 +5,14 @@ typedef struct rng {
 	uint32_t a, b, c, d;
 } rng;
 
+enum nameflags {
+	NAME_ONE = 0,
+	NAME_PLURAL = 1,
+	NAME_THE = 2,
+	NAME_A = 4,
+	NAME_CAPS = 8
+};
+
 enum cellflags {
 	CELL_STOP = 1,
 	CELL_KILL = 2,
@@ -22,9 +30,11 @@ enum mobflags {
 };
 
 typedef struct mondef {
+	struct forms_t {
+		const char *tag, *plural, *desc;
+	} forms;
 	struct asabout_t {
 		int glyph, color;
-		const char *name, *description;
 	} about;
 	struct ascell_t {
 		int flags;
@@ -63,13 +73,14 @@ typedef struct message {
 
 typedef struct chronicle {
 	struct message *last;
-	int turn_number;
+	int turn_number, count;
 } chronicle;
 
 typedef struct gameboard {
 	int width, height, size; // size = width * height, for ease
 	mondef **cells;
-	agent **mob; // one mob or item per cell
+
+	int fork_count;
 } gameboard;
 
 
@@ -95,7 +106,10 @@ extern struct game_t {
 
 
 extern struct board_t {
-	gameboard (*new)(int, int);
+	gameboard *(*new)(int, int);
+	gameboard *(*fork)(gameboard *);
+	void (*free)(gameboard *);
+
 	mondef *(*get)(gameboard *, int, int);
 	mondef *(*set)(gameboard *, int, int, const mondef *);
 	void (*generate)(gameboard *, rng *);
@@ -117,6 +131,7 @@ extern struct chronicle_t {
 extern struct builder_t {
 	struct builder_t (*clear)();
 	struct builder_t (*write)(const char *);
+	struct builder_t (*name)(const mondef *, int);
 	char *(*read)();
 	void (*publish)(chronicle *);
 } Builder;
@@ -127,5 +142,7 @@ extern struct layer_t {
 	void (*set)(layer *, int, int, int);
 	int (*get)(layer *, int, int);
 	void (*recenter)(layer *, int, int);
+
+	// add fork and free and all will be well and awesome
 } Layer;
 

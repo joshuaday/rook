@@ -7,10 +7,12 @@ chronicle *chronicle_fork(chronicle *parent) {
 	if (parent && parent->last) {
 		chron->last = parent->last;
 		parent->last->fork_count++;
+		chron->count = parent->count;
 		chron->turn_number = 1 + parent->turn_number;
 	} else {
 		chron->last = NULL;
 		chron->turn_number = 0;
+		chron->count = 0;
 	}
 	
 	return chron;
@@ -27,6 +29,7 @@ void chronicle_post (chronicle *chron, const char *text) {
 
 	msg->prev = chron->last;
 	chron->last = msg;
+	chron->count++;
 
 	memcpy(msg->text, text, length + 1);
 }

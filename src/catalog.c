@@ -6,7 +6,7 @@ const static struct colorflavor {
 } colorflavors[16] = {
 	{"black", "", "", ""},
 	{"red", "ruby", "", "blood-red"},
-	{"green", "chryosite", "", "scaly"},
+	{"green", "chryosite", "", "serpentine"},
 	{"brown", "carnelian", "", "chestnut"},
 	{"blue", "sapphire", "", ""},
 	{"purple", "azurite", "", ""},
@@ -25,41 +25,53 @@ const static struct colorflavor {
 
 const static mondef mondefs[] = {
 	{
+		.forms = {.tag = "rogue"},
 		.asmob = {15, 0, 1},
-		.about = {'@', 15, "rogue", "a swarthy looking fellow with a big ego and ambitions to match"}
+		.about = {'@', 15}
 	}, {
+		.forms = {.tag = "drunkard"},
 		.asmob = {3, MOB_STUMBLE | MOB_PATHS, 3},
-		.about = {'d', 11, "drunkard", "this drunken outlaw of the deep woods stumbles about, hoping to pick a fight"}
+		.about = {'d', 11}
 	}, {
+		.forms = {.tag = "sot"},
 		.asmob = {3, MOB_DUMB, 1},
-		.about = {'s', 11, "sot", "he's spent all his life in opium dens; now he's after you"}
+		.about = {'s', 11}
 	}, {
-		.asmob = {1, MOB_PATHS, 2},
-		.about = {'h', 3, "hound", "snarling and frothing, its snout contorted with rage, it eyes your neck like a sirloin steak."}
+		.forms = {.tag = "hound"},
+		.asmob = {1, MOB_PATHS, 4},
+		.about = {'h', 3}
 	}, {
+		.forms = {.tag = "charioteer"},
 		.asmob = {5},
-		.about = {'r', 15, "charioteer", "his horses are at pasture, but no circumstance can rob him of his lance or his aristocratic overconfidence"}
+		.about = {'r', 15}
 	}, {
+		.forms = {.tag = "horse"},
 		.asmob = {7},
-		.about = {'h', 11, "horse", "better to meet the horse than for the horse to meet his master!"}
+		.about = {'h', 11}
 	}, {
+		.forms = {.tag = "pawn"},
 		.asmob = {1},
-		.about = {'P', 15, "pawn", "he's not much in a fight, but what he lacks in brawn he makes up in disposability"}
+		.about = {'P', 15}
 	}, {
+		.forms = {.tag = "knight"},
 		.asmob = {8},
-		.about = {'K', 15, "knight", "square jaw, aquiline nose, burnished armor, mounted on a half-wild stallion: if he doesn't kill you, he'll seduce your wife"}
+		.about = {'K', 15}
 	}, {
+		.forms = {.tag = "rook"},
 		.asmob = {5},
-		.about = {'R', 15, "rook", "the greatest of the king's charioteers stands astride the finest of chariots"}
+		.about = {'R', 15}
 	}, {
+		.forms = {.tag = "bishop"},
 		.asmob = {5},
-		.about = {'B', 15, "bishop", "this cardinal would sooner die than step out of line"}
+		.about = {'B', 15}
 	}, {
+		.forms = {.tag = "queen"},
 		.asmob = {5, MOB_PATHS, 10},
-		.about = {'Q', 15, "queen", "the king's consort is the power behind the throne"}
+		.about = {'Q', 15}
 	}, {
+		.forms = {.tag = "king"},
 		.asmob = {1, MOB_PATHS | MOB_ROYAL_CAPTURE, 15},
-		.about = {'K', 15, "king", ""}
+		.about = {'K', 15}
 	},
 	{{'\0'}}
 };
@@ -67,31 +79,27 @@ const static mondef mondefs[] = {
 
 const static mondef itemdefs[] = {
 	{
+		.forms = {.tag = "the Turk's turban"},
 		.asitem = {.hacktype = 1},
-		.about = {'*', 15, "orb of the Turk", "\"the bearer of the orb,\" said the tinker, \"cannae make mistakes.\""}
+		.about = {'*', 15}
 	}, {
+		.forms = {.tag = "ring of vulnerability"},
 		.asitem = {.hacktype = 2},
-		.about = {'*', 15, "ring of vulnerability", "a single hit will kill the wearer of the ring"}
+		.about = {'*', 15}
 	}, {
+		.forms = {.tag = "ring of foreknowledge"},
 		.asitem = {.hacktype = 3},
-		.about = {'*', 15, "ring of capture", "the wearer of the ring must advance while killing"}
+		.about = {'*', 15}
 	},
-	{.about = {'/', 15, "dagger", ""}},
-	{.about = {'/', 15, "axe", ""}},
-
 	{
+		.forms = {.tag = "scroll of teleport"},
 		.asitem = {.hacktype = 4},
-		.about = {'?', 15, "scroll of teleport", ""}
-	}, {
-		.asitem = {.hacktype = 5},
-		.about = {'?', 15, "scroll of impunity", ""}
+		.about = {'?', 15}
 	},
-	{.about = {'?', 15, "scroll of slaughter", ""}},
-	{.about = {'?', 15, "scroll of blur", ""}},
-
 	{
-		.about = {'!', 15, "potion of healing", ""}},
-	{.about = {'!', 15, "potion of destruction", ""}},
+		.forms = {.tag = "potion of healing"},
+		.about = {'!', 15}
+	},
 	{{'\0'}}
 };
 
@@ -99,49 +107,54 @@ const static mondef celldefs[] = {
 	// nonterminal
 	{
 		.ascell = {0},
-		.about = {'?', 15, "blank", ""}
+		.forms = {.tag = "blank"},
+		.about = {'?', 15}
 	}, {
 		.ascell = {0},
-		.about = {',', 3, "forest", ""}
+		.forms = {.tag = "forest"},
+		.about = {',', 3}
 	},
 	// these ones actually exist:
 	{
 		.ascell = {0},
-		.about = {',', 2, "grass", ""}
+		.forms = {.tag = "grass"},
+		.about = {',', 2}
 	}, {
 		.ascell = {CELL_BLOCK | CELL_PROMOTE_ON_STEP, "grass"},
-		.about = {'"', 2, "brush", ""}
+		.forms = {.tag = "brush"},
+		.about = {'"', 2}
 	}, {
 		.ascell = {CELL_STOP | CELL_BLOCK},
-		.about = {'#', 7, "rock", ""}
+		.forms = {.tag = "rock", .plural = "rocks"},
+		.about = {'#', 7}
 	}, {
 		.ascell = {CELL_STOP | CELL_BLOCK},
-		.about = {'&', 2, "tree", ""}
+		.forms = {.tag = "tree", .plural = "trees"},
+		.about = {'&', 2}
 	}, {
 		.ascell = {0},
-		.about = {'.', 7, "floor", ""}
+		.forms = {.tag = "floor", .plural = "floors"},
+		.about = {'.', 7}
 	}, {
 		.ascell = {CELL_STOP | CELL_BLOCK},
-		.about = {'#', 7, "wall", ""}
+		.forms = {.tag = "wall", .plural = "walls"},
+		.about = {'#', 7}
 	}, {
 		.ascell = {CELL_KILL},
-		.about = {'~', 11 + 1 * 16, "magma", ""}
+		.forms = {.tag = "magma"},
+		.about = {'~', 11 + 1 * 16}
 	}, {
 		.ascell = {CELL_STOP},
-		.about = {'~', 4, "water", ""}
+		.forms = {.tag = "water"},
+		.about = {'~', 4}
 	}, {
 		.ascell = {CELL_BLOCK},
-		.about = {'+', 9, "door", ""}
+		.forms = {.tag = "door", .plural = "doors"},
+		.about = {'+', 9}
 	}, {
 		.ascell = {CELL_STOP},
-		.about = {'"', 12, "window", ""}
-	}, {
-		.ascell = {0},
-		.about = {'<', 7, "down", ""}
-	},
-	{
-		.ascell = {0},
-		.about = {'>', 7, "up", ""}
+		.forms = {.tag = "window", .plural = "windows"},
+		.about = {'"', 12}
 	},
 	{{'\0'}}
 };
@@ -153,7 +166,7 @@ static const mondef *lookup(int whichlist, const char *tag) {
 	if (whichlist == 2) list = celldefs;
 
 	for (i = 0; list[i].about.glyph != '\0'; i++) {
-		if (strcmp(list[i].about.name, tag) == 0) {
+		if (strcmp(list[i].forms.tag, tag) == 0) {
 			return list + i;
 		}
 	}

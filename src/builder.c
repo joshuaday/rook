@@ -16,6 +16,22 @@ static struct builder_t write(const char *text) {
 	return Builder;
 }
 
+static struct builder_t name(const mondef *def, int mode) {
+	if (def != 0) { // NULL
+		if (mode == 0) {
+			return write(def->forms.tag);
+		} else if (mode == 1) {
+			if (def->forms.plural != 0) {	// NULL
+				return write(def->forms.plural);
+			} else {
+				return write(def->forms.tag);
+			}
+		}
+	} else {
+		return write("null");
+	}
+}
+
 static struct builder_t clear( ) {
 	writer = buffer;
 	return Builder;
@@ -37,6 +53,7 @@ static void publish(chronicle *chron) {
 struct builder_t Builder = {
 	clear,
 	write,
+	name,
 	read,
 	publish
 };

@@ -40,7 +40,7 @@ obj/layer.o : src/layer.c src/mods.h
 
 tar : rook
 	rm -f rook.tar.gz
-	tar -czf rook.tar.gz rook Makefile vim-all.sh $(wildcard src/*)
+	tar -czf rook.tar.gz rook README Makefile vim-all.sh $(wildcard src/*)
 
 clean : 
 	rm $(OBJECTS) rook
