@@ -23,8 +23,21 @@ static gameboard *board_new(int width, int height) {
 }
 
 static gameboard *board_fork(gameboard *old) {
-	old->fork_count++;
-	return old;
+	gameboard *init = malloc(sizeof(gameboard));
+
+	init->width = old->width;
+	init->height = old->height;
+	init->size = init->width * init->height;
+
+	init->cells = malloc(sizeof(mondef *) * init->size);
+	init->fork_count = 0;
+	
+	int i;
+	for (i = 0; i < init->size; i++) {
+		init->cells[i] = old->cells[i];
+	}
+
+	return init;
 }
 
 static void board_free(gameboard *old) {
@@ -46,8 +59,10 @@ static mondef *get(gameboard *board, int x, int y) {
 }
 
 static mondef *set(gameboard *board, int x, int y, const mondef *cell) {
+	if (cell == NULL) return 0;
+
 	if (x < 0 || y < 0 || x >= board->width || y >= board->height) {
-		return 0; //Catalog.Unseen;
+		return NULL; //Catalog.Unseen;
 	}
 
 	int index = x + y * board->width;
@@ -181,7 +196,7 @@ struct frontier_t {
 #define PUSH_FRONTIER(x, y) frontier[nfrontier++] = (struct frontier_t) {(x), (y), 0}
 
 // this is a stripped-down form of dijkstra based on constant costs
-static void dijkstra(gameboard *board, agent *target, layer *out) {
+static void dijkstra(gameboard *board, agent *target, int style, layer *out) {
 	int nfrontier = 0;
 	
 	if (board == NULL || target == NULL || out == NULL) {
@@ -194,14 +209,43 @@ static void dijkstra(gameboard *board, agent *target, layer *out) {
 	Layer.recenter(out, target->x, target->y);
 	Layer.fill(out, maxpath);
 
-	PUSH_FRONTIER_SCORE(target->x, target->y, 0);
+	// instead of doing this here, we can expose a queue, but that will have some overhead
+	if (style) {
+		// note that there's some post-processing for the archer ai, too
+		int dir, i;
+		for (dir = 0; dir < 8; dir++) {
+			int x = target->x, y = target->y;
+			for (i = 1; i < 5; i++) {
+				x += dirs[dir].dx;
+				y += dirs[dir].dy;
+				
+				const mondef *it = Board.get(board, x, y);
+				if (it == NULL || (it->ascell.flags & (CELL_BLOCK))) {
+					break;
+				}
+
+				if (i > 1) {
+					PUSH_FRONTIER_SCORE(x, y, 0);
+				}
+			}
+		}
+	} else {
+		PUSH_FRONTIER_SCORE(target->x, target->y, 0);
+	}
 
 	while (nfrontier > 0) {
 		int idx = 0;
 		int x = frontier[idx].x;
 		int y = frontier[idx].y;
 		int newscore = frontier[idx].score;
-		frontier[idx] = frontier[--nfrontier];
+		// frontier[idx] = frontier[--nfrontier]; // wrong
+
+		// temporary as hell
+		int i;
+		nfrontier = nfrontier - 1;
+		for (i = idx; i < nfrontier; i++) {
+			frontier[i] = frontier[i+1];
+		}
 
 		const mondef *it = Board.get(board, x, y);
 		if (it == NULL || (it->ascell.flags & (CELL_STOP | CELL_KILL))) {
@@ -263,7 +307,7 @@ static void makehouse(gameboard *board, rng *r) {
 	const mondef *blank = Catalog.lookup(Catalog.Cell, "blank");
 
 	int x, y, dx, dy;
-	int w = 13, h = 7;
+	int w = 13, h = 9;
 
 	while (w > 4 && h > 4) {
 		int invalid = 0;

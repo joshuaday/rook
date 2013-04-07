@@ -19,6 +19,8 @@ chronicle *chronicle_fork(chronicle *parent) {
 }
 
 void chronicle_post (chronicle *chron, const char *text) {
+	if (chron == NULL || text == NULL) return;
+
 	message *msg = malloc(sizeof(message));
 
 	int length = strlen(text);

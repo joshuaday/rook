@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 layer *layer_new(int w, int h) {
-	layer *bob = malloc(sizeof(layer) + (sizeof(int) * w * h)); // these +1s are hacks and shouldn't be here
+	layer *bob = malloc(sizeof(layer) + (sizeof(int) * w * h));
 
 	if (bob == NULL) return NULL;
 

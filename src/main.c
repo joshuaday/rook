@@ -5,6 +5,8 @@
 #include <time.h>
 
 int main (int argc, char *argv[]) {
+	rng state = Rng.seed(0);
+	
 	if (Term.init()) {
 		Game.loop();
 	}
