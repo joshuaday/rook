@@ -5,7 +5,12 @@
 #define RAND_MAX_COMBO UINT32_MAX
 #define rot(x,k) (((x)<<(k))|((x)>>(32-(k))))
 
-/* version 2011 Apr 12 */
+/* version 2011 Apr 12 
+ Generator due to Bob Jenkins, found via Brian Walker
+ https://groups.google.com/forum/?fromgroups#!msg/sci.crypt.random-numbers/LAuBGOErdrk/xrMBr3guA7IJ
+
+ (utility functions are original to rook)
+*/
 
 static uint32_t rngget(rng *x) {
 	x->count++;
@@ -47,6 +52,7 @@ uint32_t randint(rng *state, uint32_t range) {
 
 	return roll;
 }
+	uint32_t split = RAND_MAX_COMBO / range, roll; while ((roll = rngget(state) / split) >= range); return roll;
 
 static int roll_readnum(const char **dice) {
 	int number = 0;
